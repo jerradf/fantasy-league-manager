@@ -99,10 +99,15 @@ def main():
     Processes all three league instances and outputs summary
     """
     print("🏈 Fantasy League Manager - Starting...")
+    print(f"🤖 AI Model: {OLLAMA_MODEL}")
     print()
     
     # Initialize shared clients
     ollama = initialize_clients()
+    
+    if not ollama.available:
+        print("💡 TIP: Want to try a different model? Run: python3 model_manager.py")
+        print()
     
     # Process each league instance
     all_results = {}

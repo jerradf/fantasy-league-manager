@@ -70,6 +70,12 @@ source ~/.zshrc
 python3 ~/workspace/custom-skills/league-manager/league_manager.py
 ```
 
+### 5. Optional: Model Management
+Check and optimize your AI model:
+```bash
+python3 ~/workspace/custom-skills/league-manager/model_manager.py
+```
+
 ## What It Does
 
 Manages three fantasy league instances:
@@ -137,13 +143,17 @@ See [SKILL.md](SKILL.md) for comprehensive documentation including:
 ├── workflow_engine.py    # 9-step engine
 ├── validators.py         # Validation logic
 ├── utils.py             # Helpers
+├── model_manager.py     # Ollama model tools
+├── setup_icloud.py      # iCloud setup
 ├── SKILL.md             # Full documentation
-└── README.md            # This file
+├── README.md            # This file
+├── KIRO_INDEX_PROMPT.md # AI development guide
+└── requirements.txt     # Dependencies
 
-~/workspace/goals/fantasy-football-trade-rebuild/hidden_files/
-├── *_core.json          # Protected players
-├── *_state.json         # Execution state
-└── *.log               # Detailed logs
+~/Library/Mobile Documents/com~apple~CloudDocs/FantasyLeague/
+├── logs/                # Execution logs
+├── state/               # State history
+└── core/                # Protected players
 ```
 
 ## Troubleshooting

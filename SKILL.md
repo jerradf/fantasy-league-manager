@@ -384,11 +384,40 @@ Each league instance executes these steps sequentially:
 ## Ollama Integration
 
 ### Local AI Model
-- **Model:** Qwen 2.5 7B (`qwen2.5:7b`)
+- **Default Model:** Qwen 2.5 7B (`qwen2.5:7b`)
 - **Endpoint:** `http://localhost:11434/api/generate`
 - **Timeout:** 120 seconds
 - **Temperature:** 0.3 (deterministic)
 - **Top P:** 0.9
+
+### Model Management
+
+Check your current model and explore alternatives:
+```bash
+python3 model_manager.py
+```
+
+The model manager:
+- Shows current configured model
+- Lists all installed Ollama models
+- Recommends optimal models for fantasy sports
+- Benchmarks model performance
+- Provides installation commands
+
+**Recommended Models:**
+
+| Model | Speed | Quality | Best For | Size |
+|-------|-------|---------|----------|------|
+| qwen2.5:7b (default) | Fast | High | Balanced choice | ~4.7GB |
+| llama3.1:8b | Fast | High | Trade analysis | ~4.9GB |
+| mistral:7b | Very Fast | Good | Speed priority | ~4.1GB |
+| gemma2:9b | Medium | Very High | Complex analysis | ~5.4GB |
+| phi3:medium | Fast | Good | Quick decisions | ~7.9GB |
+
+**To Switch Models:**
+1. Install new model: `ollama pull llama3.1:8b`
+2. Edit `config.py`: Change `OLLAMA_MODEL = "llama3.1:8b"`
+3. Restart league manager
 
 ### AI-Powered Features
 
@@ -757,6 +786,53 @@ Potential additions (not currently implemented):
 - Email/SMS notifications for ATTENTION status
 - Web dashboard for results visualization
 - Historical performance tracking
+
+## AI-Assisted Development with Kiro
+
+### Indexing the Codebase
+
+For future development work, index this entire project in Kiro:
+
+```bash
+# In Kiro chat:
+Please index the Fantasy League Manager project at ~/workspace/custom-skills/league-manager/
+
+This includes all Python modules, documentation, and architecture patterns for a 
+privacy-first fantasy sports management system with Ollama AI integration.
+```
+
+See `KIRO_INDEX_PROMPT.md` for the complete indexing prompt and usage examples.
+
+### Benefits
+- ✅ Kiro understands the entire codebase structure
+- ✅ Make changes across multiple files coherently  
+- ✅ Maintains privacy-first architecture
+- ✅ Respects coding patterns and conventions
+- ✅ Debug with complete context
+
+### Example Development Requests
+
+Once indexed, you can ask Kiro:
+
+**Add Features:**
+```
+Add email notifications when a BORDERLINE trade needs review
+```
+
+**Debug Issues:**
+```
+Fix the Yahoo API token refresh logic - it's failing after 3600 seconds
+```
+
+**Optimize:**
+```
+Profile and optimize the workflow engine - it's taking too long
+```
+
+**Extend:**
+```
+Add support for ESPN Fantasy Football following the existing API client pattern
+```
 
 ## License
 
