@@ -75,6 +75,8 @@ def format_summary(instance_name: str, results: Dict) -> str:
     
     Format:
     === INSTANCE_NAME ===
+    📊 STANDINGS: X/Y (Percentile) - Performance Status
+    🎯 ACTIONS NEEDED: Critical issues and recommendations
     (0) Identity & Status
     (1) Trends
     (2) Moves
@@ -82,23 +84,139 @@ def format_summary(instance_name: str, results: Dict) -> str:
     (4) Status
     (5) Queued
     """
-    lines = [f"\n=== {instance_name.upper()} ==="]
+    # Get trends for standing analysis
+    trends = results.get("trends", {})
+    rank = trends.get("rank", "Unknown")
+    performance_alert = trends.get("performance_alert")
+    rank_percentile = trends.get("rank_percentile")
     
-    # Step 0: Identity
+    # Build header with standings
+    lines = [f"\n{'='*70}"]
+    lines.append(f"  {instance_name.upper()}")
+    lines.append(f"{'='*70}")
+    
+    # Prominent standings display
+    if rank != "Unknown":
+        lines.append(f"")
+        lines.append(f"📊 LEAGUE STANDING: {rank}")
+        if rank_percentile:
+            if rank_percentile >= 75:
+                lines.append(f"   ⚠️  BOTTOM 25% - URGENT ACTION NEEDED")
+            elif rank_percentile >= 50:
+                lines.append(f"   📊 Middle of Pack - Can Improve")
+            elif rank_percentile >= 25:
+                lines.append(f"   ✅ Top Half - Maintain Strategy")
+            else:
+                lines.append(f"   🏆 TOP 25% - Playoff Bound!")
+    
+    # Actions needed section
+    actions_needed = []
+    
+    # Check roster issues
+    final_validation = results.get("final", {})
+    discrepancies = final_validation.get("discrepancies", [])
+    if discrepancies:
+        for issue in discrepancies[:3]:  # Top 3 issues
+            actions_needed.append(f"❌ {issue}")
+    
+    # Check performance
+    if performance_alert:
+        if "BOTTOM 25%" in performance_alert:
+            actions_needed.append("⚡ More aggressive waiver strategy needed")
+            actions_needed.append("⚡ Review protected players - are they performing?")
+            actions_needed.append("⚡ Consider trade offers to upgrade roster")
+    
+    # Check trades
+    trades = results.get("trades", {})
+    trade_decisions = trades.get("decisions", [])
+    if trade_decisions:
+        for decision in trade_decisions[:2]:
+            verdict = decision.get("verdict", "")
+            reasoning = decision.get("reasoning", "")
+            if verdict == "BORDERLINE":
+                actions_needed.append(f"🤔 Review trade offer: {reasoning}")
+    
+    # Display actions
+    if actions_needed:
+        lines.append(f"")
+        lines.append(f"🎯 ACTIONS NEEDED:")
+        for action in actions_needed[:5]:  # Max 5 actions
+            lines.append(f"   {action}")
+    else:
+        lines.append(f"")
+        lines.append(f"✅ NO CRITICAL ACTIONS - Team is optimized")
+    
+    # Check for deep analysis results
+    trends = results.get("trends", {})
+    deep_analysis = trends.get("deep_analysis")
+    
+    if deep_analysis:
+        lines.append(f"")
+        lines.append(f"🔬 DEEP ANALYSIS RESULTS:")
+        lines.append(f"{'─'*70}")
+        
+        # Drop candidates
+        drop_candidates = deep_analysis.get("drop_candidates", [])
+        if drop_candidates:
+            lines.append(f"")
+            lines.append(f"❌ DROP IMMEDIATELY ({len(drop_candidates)} players):")
+            for player in drop_candidates[:3]:
+                lines.append(f"   • {player['name']} ({player['position']}) - {player['recommended_action']}")
+                lines.append(f"     Performance: {player['performance_pct']:.0f}% of position average")
+        
+        # Underperformers
+        underperformers = deep_analysis.get("underperformers", [])
+        if underperformers:
+            lines.append(f"")
+            lines.append(f"⚠️  UNDERPERFORMERS ({len(underperformers)} players):")
+            for player in underperformers[:3]:
+                lines.append(f"   • {player['name']} ({player['position']}) - {player['recommended_action']}")
+        
+        # Waiver upgrades
+        waiver_upgrades = deep_analysis.get("waiver_upgrades", [])
+        if waiver_upgrades:
+            lines.append(f"")
+            lines.append(f"⬆️  WAIVER UPGRADES AVAILABLE ({len(waiver_upgrades)}):")
+            for player in waiver_upgrades[:3]:
+                lines.append(f"   • {player['name']} ({player['position']}) - {player['advantage']}")
+        
+        # Trade targets
+        trade_targets = deep_analysis.get("trade_targets", [])
+        if trade_targets[:2]:
+            lines.append(f"")
+            lines.append(f"💼 TOP TRADE TARGETS:")
+            for player in trade_targets[:2]:
+                lines.append(f"   • {player['name']} ({player['position']}) on {player['owner']}")
+        
+        # Position analysis
+        position_analysis = deep_analysis.get("position_analysis", {})
+        if position_analysis:
+            lines.append(f"")
+            lines.append(f"📊 POSITION STRENGTH:")
+            for pos, data in sorted(position_analysis.items()):
+                strength = data.get("strength", "")
+                count = data.get("count", 0)
+                lines.append(f"   • {pos}: {strength} ({count} players)")
+        
+        lines.append(f"")
+        lines.append(f"{'─'*70}")
+    
+    lines.append(f"")
+    lines.append(f"{'─'*70}")
+    
+    # Original summary details
     identity = results.get("identity", {})
-    league_id = identity.get("league_id", "Unknown")
     week = identity.get("current_week", "?")
     platform_status = identity.get("platform_status", "UNKNOWN")
     extra_info = identity.get("extra_info", "")
     
     lines.append(f"(0) Week {week} | Platform: {platform_status} | {extra_info}")
     
-    # Step 1: Trends
-    trends = results.get("trends", {})
+    # Trends
     trend_summary = trends.get("summary", "No trend data")
     lines.append(f"(1) Trends: {trend_summary}")
     
-    # Step 2: Moves (Steps 3 & 4 - streaming and lineup)
+    # Moves
     moves = []
     streaming = results.get("streaming", {})
     lineup = results.get("lineup", {})
@@ -117,12 +235,8 @@ def format_summary(instance_name: str, results: Dict) -> str:
     else:
         lines.append("(2) Moves: None executed")
     
-    # Step 3: Trades
-    trades = results.get("trades", {})
-    trade_decisions = trades.get("decisions", [])
-    
+    # Trades
     if trade_decisions:
-        # Show first trade decision (1-sentence limit)
         first_trade = trade_decisions[0]
         verdict = first_trade.get("verdict", "UNKNOWN")
         reasoning = first_trade.get("reasoning", "")
@@ -131,8 +245,7 @@ def format_summary(instance_name: str, results: Dict) -> str:
     else:
         lines.append("(3) Trades: None pending")
     
-    # Step 4: Validation status
-    final_validation = results.get("final", {})
+    # Validation status
     verdict = final_validation.get("verdict", "UNKNOWN")
     issues = final_validation.get("discrepancies", [])
     
@@ -142,13 +255,15 @@ def format_summary(instance_name: str, results: Dict) -> str:
     else:
         lines.append(f"(4) Status: {verdict}")
     
-    # Step 5: Queued actions
+    # Queued actions
     queued = results.get("queued", [])
     if queued:
         queued_summary = queued[0].get("summary", "Tasks queued")
         lines.append(f"(5) Queued: {queued_summary}")
     else:
         lines.append("(5) Queued: None")
+    
+    lines.append(f"{'='*70}")
     
     return "\n".join(lines)
 

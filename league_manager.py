@@ -7,6 +7,7 @@ Execute: python3 ~/workspace/custom-skills/league-manager/league_manager.py
 
 import sys
 import os
+import json
 import logging
 from pathlib import Path
 
@@ -51,6 +52,14 @@ def process_league(instance_name: str, league_config: dict, ollama: OllamaClient
     
     Returns: workflow results dict
     """
+    # Read actual league name from iCloud core file (NEVER from code!)
+    league_display_name = instance_name
+    try:
+        core_data = json.load(open(league_config["core_file"]))
+        league_display_name = core_data.get("league_display_name", league_config["team_name"])
+    except:
+        league_display_name = league_config["team_name"]
+    
     # Setup instance-specific logging
     logger = setup_logging(
         instance_name,
@@ -58,7 +67,7 @@ def process_league(instance_name: str, league_config: dict, ollama: OllamaClient
     )
     
     logger.info(f"="*60)
-    logger.info(f"Processing {instance_name.upper()}: {league_config['team_name']}")
+    logger.info(f"Processing {instance_name.upper()}: {league_display_name}")
     logger.info(f"="*60)
     
     try:
