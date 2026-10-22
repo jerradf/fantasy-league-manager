@@ -7,12 +7,15 @@ A complete, production-ready fantasy sports management system with:
 ### Core Features
 - 🏈 **3 League Instance Support** - Yahoo NBA + 2x Sleeper NFL
 - 🤖 **Local Ollama AI Integration** - Qwen 2.5 7B (no external APIs)
+- 🤖 **FULLY AUTONOMOUS** - Zero human intervention required
+- ⚡ **Auto-Execute Everything** - Trades, waivers, lineups, injury moves
+- 🎯 **Calculated Risk Taking** - Mathematical thresholds for decisions
 - 🔒 **Privacy-First Architecture** - Personal data in iCloud, generic code in Git
 - ⚙️ **9-Step Deterministic Workflow** - Systematic league management
-- 📊 **Trade Analysis** - 2-pass AI validation (PASS/FAIL/BORDERLINE)
-- 💡 **Lineup Optimization** - Enforces injury/bye week rules
-- 🎯 **Waiver Recommendations** - AI-powered streaming suggestions
-- 🏥 **Injury Classification** - RETURNING/EXTENDED/SEASON_ENDING
+- 📊 **Trade Analysis** - Auto-accept/reject/counter with 2-pass validation
+- 💡 **Lineup Optimization** - Auto-set with injury/bye enforcement
+- 🎯 **Waiver Execution** - Auto-execute optimal streaming moves
+- 🏥 **Injury Management** - Auto IR placement, drops, replacements
 - 🛡️ **Protected Player Management** - Never drop your stars
 
 ### New Tools Added

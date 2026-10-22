@@ -78,30 +78,35 @@ python3 ~/workspace/custom-skills/league-manager/model_manager.py
 
 ## What It Does
 
-Manages three fantasy league instances:
-- **GoonBoys** (Yahoo NBA)
-- **NNL** (Sleeper NFL)
-- **Fellowship** (Sleeper NFL)
+**FULLY AUTONOMOUS** fantasy league management - zero human intervention required.
 
-Each instance runs through a 9-step workflow:
+Manages three fantasy league instances:
+- **League 1** (configurable - e.g., Yahoo NBA)
+- **League 2** (configurable - e.g., Sleeper NFL)
+- **League 3** (configurable - e.g., Sleeper NFL)
+
+Each instance runs through a 9-step autonomous workflow:
 0. Platform connectivity check
 1. Pull live roster/standings data
 2. Protect core players
-3. Identify waiver wire opportunities
-4. Optimize starting lineup
-5. Evaluate pending trades (AI-powered)
+3. **Execute optimal waiver moves automatically**
+4. **Optimize and set starting lineup automatically**
+5. **Evaluate and execute/reject trades automatically** (including counter-offers)
 6. Validate team health
-7. Analyze injury timelines
+7. **Analyze injuries and execute roster moves** (IR, drops, pickups)
 8. Final roster verification
 
 ## Features
 
+- ✅ **Fully Autonomous** - Set it and forget it
+- ✅ **No Human Review** - AI makes all decisions deterministically
+- ✅ **Auto-Accept/Reject Trades** - With counter-trade generation
+- ✅ **Auto-Execute Waivers** - Optimal streaming based on matchups
+- ✅ **Auto-Set Lineups** - Respects injury/bye rules
+- ✅ **Auto-Manage Injuries** - IR placement, drops, replacements
+- ✅ **Calculated Risk Taking** - Uses mathematical thresholds
 - ✅ Local AI analysis (no external data leakage)
-- ✅ Trade evaluation with 2-pass validation
-- ✅ Automated lineup optimization
-- ✅ Waiver wire recommendations
-- ✅ Injury timeline classification
-- ✅ Protected player management
+- ✅ Protected player management (stars never dropped)
 - ✅ Detailed logging per instance
 
 ## Output Example

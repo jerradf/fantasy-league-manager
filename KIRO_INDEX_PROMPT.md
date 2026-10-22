@@ -25,13 +25,16 @@ This is a Python-based autonomous fantasy sports manager with the following arch
 - setup_icloud.py: iCloud Drive personal data setup
 
 **Key Features:**
-1. Privacy-first design: All personal data (league names, logs, strategies) stored in iCloud Drive
-2. Generic codebase safe for GitHub portfolios (no hardcoded personal info)
-3. Three configurable league instances loaded from environment variables
-4. 9-step deterministic workflow per league execution
-5. Local AI-powered trade analysis, lineup optimization, waiver recommendations
-6. Protected player management
-7. Comprehensive validation and safety checks
+1. **FULLY AUTONOMOUS OPERATION:** Zero human intervention - all decisions made by AI
+2. Privacy-first design: All personal data (league names, logs, strategies) stored in iCloud Drive
+3. Generic codebase safe for GitHub portfolios (no hardcoded personal info)
+4. Three configurable league instances loaded from environment variables
+5. 9-step deterministic workflow with auto-execution per league
+6. Local AI-powered trade analysis with auto-accept/reject and counter-offer generation
+7. Automatic waiver execution based on optimal streaming strategy
+8. Automatic lineup optimization and injury management
+9. Protected player management
+10. Comprehensive validation and calculated risk-taking logic
 
 **Architecture Highlights:**
 - Environment variable configuration (~/.zshrc)
@@ -64,32 +67,32 @@ Once indexed, you can ask Kiro:
 
 ### Add New Feature
 ```
-Add a feature to automatically propose trades based on roster needs and available players. 
-Update the workflow engine to include this in step 5, and create a new trade_proposer.py module.
+Add pre-emptive trade generation - system should scan league rosters weekly and 
+auto-generate profitable trade offers to send to other teams based on their needs.
 ```
 
 ### Debug Issue
 ```
-The Yahoo API authentication is failing. Check the api_client.py Yahoo OAuth flow and 
-fix any token refresh issues.
+The auto-waiver execution is not working on Sleeper. Check the cookie authentication 
+in api_client.py and fix the POST request headers.
 ```
 
 ### Extend Platform Support
 ```
 Add support for ESPN Fantasy Football. Create a new ESPN API client following the 
-same pattern as Sleeper and Yahoo clients.
+same pattern as Sleeper and Yahoo clients, with auto-execution capabilities.
 ```
 
 ### Optimize Performance
 ```
-The workflow is taking too long. Profile the code and optimize the API calls and 
-AI inference. Consider caching strategies.
+The trade evaluation AI is slow. Optimize the Ollama prompts and consider 
+using a faster model for real-time decision making.
 ```
 
-### Add Testing
+### Add Advanced Logic
 ```
-Create comprehensive unit tests for the validators.py module. Cover all validation 
-functions with edge cases.
+Create a multi-week lookahead for waiver streaming - system should plan pickups 
+2-3 weeks in advance based on playoff schedules and matchup data.
 ```
 
 ## Benefits of Indexing

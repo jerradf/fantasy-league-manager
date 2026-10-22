@@ -2,7 +2,11 @@
 
 ## Overview
 
-The Fantasy League Manager is an autonomous Python-based system that orchestrates three fantasy sports league instances through a deterministic 9-step workflow. It integrates with Sleeper NFL and Yahoo NBA APIs, leveraging local Ollama AI (Qwen 2.5 7B model) for intelligent trade analysis, lineup optimization, and waiver recommendations.
+The Fantasy League Manager is a **fully autonomous** Python-based system that orchestrates three fantasy sports league instances through a deterministic 9-step workflow **with zero human intervention required**. 
+
+It integrates with Sleeper NFL and Yahoo NBA APIs, leveraging local Ollama AI (Qwen 2.5 7B model) for intelligent trade analysis, lineup optimization, and waiver recommendations. The system operates completely autonomously - evaluating trades, executing optimal moves, managing injuries, and making calculated risk decisions using deterministic logic.
+
+**Key Principle:** Set it and forget it. The AI handles everything from waiver pickups to trade acceptances to lineup optimization without requiring manual approval.
 
 ## Privacy-First Architecture Design
 
@@ -275,7 +279,9 @@ Each league instance executes these steps sequentially:
 ---
 
 ### Step 5: Trades
-**Purpose:** Evaluate pending trade offers with 2-pass AI validation
+**Purpose:** Evaluate pending trade offers with 2-pass AI validation and AUTO-EXECUTE
+
+**FULLY AUTONOMOUS:** No human review required - system makes all decisions
 
 **Pass 1 - Mathematical Value:**
 - Compare projected points over season
@@ -289,12 +295,20 @@ Each league instance executes these steps sequentially:
 - Validate roster construction post-trade
 - Flag unusual patterns
 
-**Verdicts:**
-- **PASS:** Auto-accept (clear mathematical win)
-- **FAIL:** Auto-reject (clear mathematical loss)
-- **BORDERLINE:** Flag for manual review with 1-sentence synopsis
+**Verdicts & AUTOMATIC ACTIONS:**
+- **PASS:** Auto-accept immediately (clear mathematical win)
+- **FAIL:** Auto-reject immediately (clear mathematical loss)
+- **BORDERLINE:** Apply risk threshold logic:
+  - If value gain > 8%: Accept (calculated risk)
+  - If value loss < 5%: Accept (minimal downside)
+  - Otherwise: Reject (not worth the risk)
 
-**Output:** Trade decisions with reasoning
+**Counter-Trade Generation:**
+- If received trade is FAIL but player interests align
+- System generates counter-offer with fair value
+- Auto-submits counter-trade to league
+
+**Output:** Trade decisions executed automatically with reasoning logged
 
 ---
 
@@ -816,7 +830,8 @@ Once indexed, you can ask Kiro:
 
 **Add Features:**
 ```
-Add email notifications when a BORDERLINE trade needs review
+Add pre-emptive trade proposals - system should identify underperforming teams 
+and auto-generate favorable trade offers to send out
 ```
 
 **Debug Issues:**
@@ -832,6 +847,11 @@ Profile and optimize the workflow engine - it's taking too long
 **Extend:**
 ```
 Add support for ESPN Fantasy Football following the existing API client pattern
+```
+
+**Enhance AI:**
+```
+Improve the trade counter-offer generation to include 2-for-1 and 3-for-2 trades
 ```
 
 ## License
