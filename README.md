@@ -24,6 +24,21 @@ Autonomous Python-based fantasy sports manager for Mac with local Ollama AI inte
 
 ## Quick Start
 
+### 🚀 ONE-CLICK SETUP (Automated)
+
+Double-click on Desktop:
+```
+ONE_CLICK_SETUP.sh
+```
+
+This automatically:
+1. Downloads AI model (qwen2.5:7b)
+2. Opens browser to get your Sleeper cookie
+3. Configures everything for write actions
+4. Verifies setup
+
+### Manual Setup (If Needed)
+
 ### 1. Install Dependencies
 ```bash
 pip3 install requests python-dotenv pyyaml

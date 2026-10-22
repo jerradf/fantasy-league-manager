@@ -42,12 +42,27 @@ class WorkflowEngine:
         self.core_players = load_core_players(self.config["core_file"])
         self.state = load_json(self.config["state_file"]) or {}
         
+        # Load credentials from iCloud (NEVER from code)
+        self.credentials = self._load_credentials()
+        
         # Runtime data
         self.roster = []
         self.league_info = {}
         self.current_week = 1
         self.moves_executed = []
         self.issues_found = []
+    
+    def _load_credentials(self) -> Dict:
+        """Load API credentials from iCloud ONLY"""
+        from pathlib import Path
+        cred_file = Path.home() / "Library" / "Mobile Documents" / "com~apple~CloudDocs" / "FantasyLeague" / "credentials.json"
+        
+        try:
+            import json
+            with open(cred_file, 'r') as f:
+                return json.load(f)
+        except:
+            return {}
     
     def execute(self) -> Dict:
         """Run all 9 steps sequentially and return results"""
@@ -392,9 +407,13 @@ class WorkflowEngine:
         }
         
         try:
-            # Check write permissions
-            cookie = os.environ.get("SLEEPER_COOKIE")
-            can_execute = bool(cookie)
+            # Check write permissions - token from iCloud ONLY
+            token = self.credentials.get("sleeper_token")
+            can_execute = bool(token)
+            
+            if not can_execute:
+                self.logger.warning("No Sleeper token found in iCloud credentials.json")
+                self.logger.warning("To add: Save JWT token to ~/Library/Mobile Documents/com~apple~CloudDocs/FantasyLeague/credentials.json")
             
             if self.config["platform"] == "sleeper_nfl":
                 # Get pending trades
@@ -435,37 +454,39 @@ class WorkflowEngine:
                             if can_execute:
                                 if verdict == "PASS":
                                     self.logger.info(f"⚡ AUTO-ACCEPTING trade {trade_id}")
-                                    # ACTUAL WRITE ACTION
-                                    # exec_result = self.api.post_trade_accept(
-                                    #     self.config["league_id"],
-                                    #     trade_id,
-                                    #     cookie
-                                    # )
-                                    # if exec_result:
-                                    #     result["executed"].append(trade_id)
-                                    #     self.logger.info(f"✅ Trade {trade_id} ACCEPTED")
-                                    result["executed"].append({
-                                        "trade_id": trade_id,
-                                        "action": "ACCEPT",
-                                        "status": "READY TO EXECUTE"
-                                    })
+                                    # ACTUAL WRITE ACTION with token from iCloud
+                                    exec_result = self.api.post_trade_accept(
+                                        self.config["league_id"],
+                                        trade_id,
+                                        token
+                                    )
+                                    if exec_result:
+                                        result["executed"].append(trade_id)
+                                        self.logger.info(f"✅ Trade {trade_id} ACCEPTED")
+                                    else:
+                                        result["executed"].append({
+                                            "trade_id": trade_id,
+                                            "action": "ACCEPT FAILED",
+                                            "status": "Check token validity"
+                                        })
                                     
                                 elif verdict == "FAIL":
                                     self.logger.info(f"⚡ AUTO-REJECTING trade {trade_id}")
-                                    # ACTUAL WRITE ACTION  
-                                    # exec_result = self.api.post_trade_reject(
-                                    #     self.config["league_id"],
-                                    #     trade_id,
-                                    #     cookie
-                                    # )
-                                    # if exec_result:
-                                    #     result["rejected"].append(trade_id)
-                                    #     self.logger.info(f"✅ Trade {trade_id} REJECTED")
-                                    result["rejected"].append({
-                                        "trade_id": trade_id,
-                                        "action": "REJECT",
-                                        "status": "READY TO EXECUTE"
-                                    })
+                                    # ACTUAL WRITE ACTION with token from iCloud
+                                    exec_result = self.api.post_trade_reject(
+                                        self.config["league_id"],
+                                        trade_id,
+                                        token
+                                    )
+                                    if exec_result:
+                                        result["rejected"].append(trade_id)
+                                        self.logger.info(f"✅ Trade {trade_id} REJECTED")
+                                    else:
+                                        result["rejected"].append({
+                                            "trade_id": trade_id,
+                                            "action": "REJECT FAILED",
+                                            "status": "Check token validity"
+                                        })
                                     
                                 elif verdict == "BORDERLINE":
                                     # Apply risk threshold logic
