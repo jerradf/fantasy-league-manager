@@ -24,54 +24,67 @@ CORE_DIR.mkdir(parents=True, exist_ok=True)
 # League configurations
 # ALL personal data loaded from environment variables
 # League names are generic - actual names stored in iCloud only
-LEAGUES = {
-    "league1": {
-        "platform": os.environ.get("LEAGUE1_PLATFORM", "yahoo_nba"),
-        "league_id": os.environ.get("LEAGUE1_ID", ""),
-        "team_name": os.environ.get("LEAGUE1_TEAM_NAME", "Team 1"),
-        "rules": {
-            "adds_per_week": int(os.environ.get("LEAGUE1_ADDS_PER_WEEK", "4")),
-            "il_slots": int(os.environ.get("LEAGUE1_IL_SLOTS", "3")),
-            "scoring": os.environ.get("LEAGUE1_SCORING", "category")
-        },
-        "inactive_league_id": os.environ.get("LEAGUE1_INACTIVE_ID", ""),
-        "core_file": CORE_DIR / "league1_core.json",
-        "state_file": STATE_DIR / "league1_state.json",
-        "log_file": LOGS_DIR / "league1.log"
-    },
-    "league2": {
-        "platform": os.environ.get("LEAGUE2_PLATFORM", "sleeper_nfl"),
-        "league_id": os.environ.get("LEAGUE2_ID", ""),
-        "roster_id": os.environ.get("LEAGUE2_ROSTER_ID", "8"),
-        "team_name": os.environ.get("LEAGUE2_TEAM_NAME", "Team 2"),
-        "rules": {
-            "no_te_slot": os.environ.get("LEAGUE2_NO_TE_SLOT", "true").lower() == "true",
-            "te_flex_only": os.environ.get("LEAGUE2_TE_FLEX_ONLY", "true").lower() == "true",
-            "waiver_day": os.environ.get("LEAGUE2_WAIVER_DAY", "Tuesday"),
-            "trade_deadline_week": int(os.environ.get("LEAGUE2_TRADE_DEADLINE", "12")),
-            "trade_review_days": int(os.environ.get("LEAGUE2_TRADE_REVIEW_DAYS", "1")),
-            "playoff_teams": int(os.environ.get("LEAGUE2_PLAYOFF_TEAMS", "8")),
-            "total_teams": int(os.environ.get("LEAGUE2_TOTAL_TEAMS", "12"))
-        },
-        "core_file": CORE_DIR / "league2_core.json",
-        "state_file": STATE_DIR / "league2_state.json",
-        "log_file": LOGS_DIR / "league2.log"
-    },
-    "league3": {
-        "platform": os.environ.get("LEAGUE3_PLATFORM", "sleeper_nfl"),
-        "league_id": os.environ.get("LEAGUE3_ID", ""),
-        "roster_id": os.environ.get("LEAGUE3_ROSTER_ID", "8"),
-        "team_name": os.environ.get("LEAGUE3_TEAM_NAME", "Team 3"),
-        "rules": {
-            "waiver_day": os.environ.get("LEAGUE3_WAIVER_DAY", "Tuesday"),
-            "trade_deadline_week": int(os.environ.get("LEAGUE3_TRADE_DEADLINE", "11")),
-            "instant_trades": os.environ.get("LEAGUE3_INSTANT_TRADES", "true").lower() == "true"
-        },
-        "core_file": CORE_DIR / "league3_core.json",
-        "state_file": STATE_DIR / "league3_state.json",
-        "log_file": LOGS_DIR / "league3.log"
+# System auto-detects leagues 1-20 from environment variables
+
+def _build_league_config(league_num: int) -> dict:
+    """Build league config from environment variables"""
+    prefix = f"LEAGUE{league_num}"
+    league_id = os.environ.get(f"{prefix}_ID", "")
+    
+    if not league_id:
+        return None  # League not configured
+    
+    platform = os.environ.get(f"{prefix}_PLATFORM", "sleeper_nfl")
+    
+    config = {
+        "platform": platform,
+        "league_id": league_id,
+        "team_name": os.environ.get(f"{prefix}_TEAM_NAME", f"Team {league_num}"),
+        "roster_id": os.environ.get(f"{prefix}_ROSTER_ID", ""),
+        "rules": {},
+        "core_file": CORE_DIR / f"league{league_num}_core.json",
+        "state_file": STATE_DIR / f"league{league_num}_state.json",
+        "log_file": LOGS_DIR / f"league{league_num}.log"
     }
-}
+    
+    # Platform-specific rules
+    if platform == "yahoo_nba":
+        config["rules"] = {
+            "adds_per_week": int(os.environ.get(f"{prefix}_ADDS_PER_WEEK", "4")),
+            "il_slots": int(os.environ.get(f"{prefix}_IL_SLOTS", "3")),
+            "scoring": os.environ.get(f"{prefix}_SCORING", "category")
+        }
+        config["inactive_league_id"] = os.environ.get(f"{prefix}_INACTIVE_ID", "")
+    
+    elif platform == "sleeper_nfl":
+        config["rules"] = {
+            "waiver_day": os.environ.get(f"{prefix}_WAIVER_DAY", "Tuesday"),
+            "trade_deadline_week": int(os.environ.get(f"{prefix}_TRADE_DEADLINE", "12")),
+        }
+        
+        # Optional rules
+        if os.environ.get(f"{prefix}_NO_TE_SLOT"):
+            config["rules"]["no_te_slot"] = os.environ.get(f"{prefix}_NO_TE_SLOT", "").lower() == "true"
+            config["rules"]["te_flex_only"] = os.environ.get(f"{prefix}_TE_FLEX_ONLY", "").lower() == "true"
+        
+        if os.environ.get(f"{prefix}_INSTANT_TRADES"):
+            config["rules"]["instant_trades"] = os.environ.get(f"{prefix}_INSTANT_TRADES", "").lower() == "true"
+        
+        if os.environ.get(f"{prefix}_TRADE_REVIEW_DAYS"):
+            config["rules"]["trade_review_days"] = int(os.environ.get(f"{prefix}_TRADE_REVIEW_DAYS", "1"))
+        
+        if os.environ.get(f"{prefix}_PLAYOFF_TEAMS"):
+            config["rules"]["playoff_teams"] = int(os.environ.get(f"{prefix}_PLAYOFF_TEAMS", "8"))
+            config["rules"]["total_teams"] = int(os.environ.get(f"{prefix}_TOTAL_TEAMS", "12"))
+    
+    return config
+
+# Auto-discover leagues from environment variables (supports up to 20 leagues)
+LEAGUES = {}
+for i in range(1, 21):
+    league_config = _build_league_config(i)
+    if league_config:
+        LEAGUES[f"league{i}"] = league_config
 
 # API Configuration
 SLEEPER_BASE_URL = "https://api.sleeper.app/v1"

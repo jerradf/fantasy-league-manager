@@ -734,6 +734,41 @@ ollama pull qwen2.5:7b
 
 ## Advanced Configuration
 
+### Adding More Leagues
+
+The system supports up to 20 leagues. To add a new league:
+
+**EASY WAY (Interactive):**
+```bash
+~/workspace/custom-skills/league-manager/add_league.sh
+```
+
+The script will:
+1. Ask for platform (Sleeper/Yahoo)
+2. Ask for league ID
+3. Ask for team name and settings
+4. Automatically add to config.py
+5. Create iCloud storage files
+6. Update environment variables
+
+**MANUAL WAY:**
+
+1. Add environment variables to `~/.zshrc`:
+```bash
+# League 4 (Your New League)
+export LEAGUE4_PLATFORM="sleeper_nfl"
+export LEAGUE4_ID="your_league_id"
+export LEAGUE4_ROSTER_ID="your_roster_id"
+export LEAGUE4_TEAM_NAME="Your Team Name"
+export LEAGUE4_TRADE_DEADLINE="12"
+```
+
+2. Reload: `source ~/.zshrc`
+
+3. Run: `python3 league_manager.py`
+
+The system will auto-detect the new league and create necessary files!
+
 ### Modifying Protected Players
 Edit `~/workspace/goals/fantasy-football-trade-rebuild/hidden_files/{instance}_core.json`:
 

@@ -65,10 +65,19 @@ Reload:
 source ~/.zshrc
 ```
 
-### 4. Run
-```bash
-python3 ~/workspace/custom-skills/league-manager/league_manager.py
+### 4. Run (THE COMMAND THAT ACTUALLY WORKS)
+
+**EASY WAY - Double-click on Desktop:**
 ```
+RUN_LEAGUE_MANAGER.sh
+```
+
+**OR Terminal:**
+```bash
+~/Desktop/RUN_LEAGUE_MANAGER.sh
+```
+
+This script loads all environment variables and runs the manager.
 
 ### 5. Optional: Model Management
 Check and optimize your AI model:
