@@ -1,0 +1,67 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment variables (NEVER COMMIT)
+.env
+.env.local
+.env.*.local
+
+# Logs (contain sensitive data)
+*.log
+
+# iCloud Drive - Personal Data (NEVER COMMIT)
+Library/
+Mobile\ Documents/
+**/FantasyLeague/
+
+# State files (contain personal data)
+*_state.json
+
+# Core files (contain player strategies)
+*_core.json
+
+# Any files with league names (just in case)
+*goonboys*
+*nnl*
+*fellowship*
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Temporary files
+*.tmp
+*.bak
+*.backup
