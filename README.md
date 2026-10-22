@@ -41,29 +41,44 @@ ollama pull qwen2.5:7b
 ```
 
 ### 3. Set Environment Variables
-Copy `.env.example` and add to `~/.zshrc`:
-```bash
-# API Credentials
-export YAHOO_CLIENT_ID="your_client_id"
-export YAHOO_CLIENT_SECRET="your_client_secret"
-export YAHOO_REFRESH_TOKEN="your_refresh_token"
-export SLEEPER_COOKIE="your_sleeper_cookie"
 
-# League IDs and Team Names
-export GOONBOYS_LEAGUE_ID="your_yahoo_league_id"
-export GOONBOYS_TEAM_NAME="Your Team Name"
-export NNL_LEAGUE_ID="your_sleeper_league_id"
-export NNL_ROSTER_ID="your_roster_id"
-export NNL_TEAM_NAME="Your Team Name"
-export FELLOWSHIP_LEAGUE_ID="your_sleeper_league_id"
-export FELLOWSHIP_ROSTER_ID="your_roster_id"
-export FELLOWSHIP_TEAM_NAME="Your Team Name"
+The system uses environment variables for all league-specific configuration. Add to `~/.zshrc`:
+
+```bash
+# Fantasy League Manager Configuration
+
+# API Credentials
+export YAHOO_CLIENT_ID="<yahoo_oauth_client_id>"
+export YAHOO_CLIENT_SECRET="<yahoo_oauth_secret>"
+export YAHOO_REFRESH_TOKEN="<yahoo_oauth_refresh_token>"
+export SLEEPER_COOKIE="<sleeper_session_cookie>"
+
+# League Configuration
+export LEAGUE1_PLATFORM="yahoo_nba"
+export LEAGUE1_ID="<league_identifier>"
+export LEAGUE1_TEAM_NAME="<team_name>"
+export LEAGUE1_ADDS_PER_WEEK="4"
+export LEAGUE1_IL_SLOTS="3"
+
+export LEAGUE2_PLATFORM="sleeper_nfl"
+export LEAGUE2_ID="<league_identifier>"
+export LEAGUE2_ROSTER_ID="<roster_number>"
+export LEAGUE2_TEAM_NAME="<team_name>"
+export LEAGUE2_TRADE_DEADLINE="12"
+
+export LEAGUE3_PLATFORM="sleeper_nfl"
+export LEAGUE3_ID="<league_identifier>"
+export LEAGUE3_ROSTER_ID="<roster_number>"
+export LEAGUE3_TEAM_NAME="<team_name>"
+export LEAGUE3_INSTANT_TRADES="true"
 ```
 
 Reload:
 ```bash
 source ~/.zshrc
 ```
+
+**Note:** The included `RUN_LEAGUE_MANAGER.sh` handles this automatically.
 
 ### 4. Run (THE COMMAND THAT ACTUALLY WORKS)
 
