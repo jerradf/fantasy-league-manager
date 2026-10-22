@@ -616,31 +616,31 @@ Copy `.env.example` and add your personal configuration to `~/.zshrc`:
 
 ```bash
 # API Credentials
-export YAHOO_CLIENT_ID="your_client_id"
-export YAHOO_CLIENT_SECRET="your_client_secret"
-export YAHOO_REFRESH_TOKEN="your_refresh_token"
-export SLEEPER_COOKIE="your_sleeper_cookie"
+export YAHOO_CLIENT_ID="<yahoo_oauth_client_id>"
+export YAHOO_CLIENT_SECRET="<yahoo_oauth_secret>"
+export YAHOO_REFRESH_TOKEN="<yahoo_oauth_refresh_token>"
+export SLEEPER_COOKIE="<sleeper_session_cookie>"
 
 # League 1 Configuration (e.g., Yahoo NBA)
 export LEAGUE1_PLATFORM="yahoo_nba"
-export LEAGUE1_ID="your_league_id"
-export LEAGUE1_TEAM_NAME="Your Team Name"  # SAFE - not in git
+export LEAGUE1_ID="<league_identifier>"
+export LEAGUE1_TEAM_NAME="<team_name>"
 export LEAGUE1_ADDS_PER_WEEK="4"
 export LEAGUE1_IL_SLOTS="3"
 
 # League 2 Configuration (e.g., Sleeper NFL)
 export LEAGUE2_PLATFORM="sleeper_nfl"
-export LEAGUE2_ID="your_league_id"
-export LEAGUE2_ROSTER_ID="your_roster_id"
-export LEAGUE2_TEAM_NAME="Your Team Name"  # SAFE - not in git
+export LEAGUE2_ID="<league_identifier>"
+export LEAGUE2_ROSTER_ID="<roster_number>"
+export LEAGUE2_TEAM_NAME="<team_name>"
 export LEAGUE2_NO_TE_SLOT="true"
 export LEAGUE2_TRADE_DEADLINE="12"
 
 # League 3 Configuration
 export LEAGUE3_PLATFORM="sleeper_nfl"
-export LEAGUE3_ID="your_league_id"
-export LEAGUE3_ROSTER_ID="your_roster_id"
-export LEAGUE3_TEAM_NAME="Your Team Name"  # SAFE - not in git
+export LEAGUE3_ID="<league_identifier>"
+export LEAGUE3_ROSTER_ID="<roster_number>"
+export LEAGUE3_TEAM_NAME="<team_name>"
 export LEAGUE3_INSTANT_TRADES="true"
 ```
 
