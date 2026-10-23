@@ -11,13 +11,16 @@ from pathlib import Path
 # Use iCloud Drive for all personal data, logs, and league-specific info
 ICLOUD_DIR = Path.home() / "Library" / "Mobile Documents" / "com~apple~CloudDocs"
 FANTASY_DATA_DIR = ICLOUD_DIR / "FantasyLeague"
-LOGS_DIR = FANTASY_DATA_DIR / "logs"
+REPO_DIR = Path(__file__).parent
+RUN_LOG_DIR = REPO_DIR / "logs" / "2026" / "sleeper"
+LOGS_DIR = REPO_DIR / "logs"
 STATE_DIR = FANTASY_DATA_DIR / "state"
 CORE_DIR = FANTASY_DATA_DIR / "core"
 
 # Ensure directories exist
 FANTASY_DATA_DIR.mkdir(parents=True, exist_ok=True)
 LOGS_DIR.mkdir(parents=True, exist_ok=True)
+RUN_LOG_DIR.mkdir(parents=True, exist_ok=True)
 STATE_DIR.mkdir(parents=True, exist_ok=True)
 CORE_DIR.mkdir(parents=True, exist_ok=True)
 

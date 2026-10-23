@@ -1,0 +1,2 @@
+0 6 * * * /Users/jrdmf/workspace/custom-skills/league-manager/scripts/run_manager.sh
+0 16 * * * /Users/jrdmf/workspace/custom-skills/league-manager/scripts/run_manager.sh

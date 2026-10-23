@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/Users/jrdmf/opt/anaconda3/bin/python3
 """
 Fantasy League Manager
 Orchestrates three fantasy league instances with deterministic 9-step workflow
@@ -19,6 +19,7 @@ from api_client import SleeperClient, YahooClient, create_api_client
 from ollama_client import OllamaClient
 from workflow_engine import WorkflowEngine
 from utils import format_summary, setup_logging
+from run_log import write_run_log, commit_and_push_log
 
 
 # Configure root logger
@@ -120,6 +121,7 @@ def main():
     
     # Process each league instance
     all_results = {}
+    run_log_lines = []
     
     for instance_name, league_config in LEAGUES.items():
         print(f"Processing {instance_name}...")
@@ -132,6 +134,10 @@ def main():
             summary = format_summary(instance_name, results)
             print(summary)
             print()
+            run_log_lines.append(summary)
+            run_log_lines.append('```json')
+            run_log_lines.append(json.dumps(results, indent=2, default=str))
+            run_log_lines.append('```')
         
         except KeyboardInterrupt:
             print("\n⚠️  Interrupted by user")
@@ -147,6 +153,13 @@ def main():
     print(f"Processed {len(all_results)} league instances")
     print("="*60)
     
+    try:
+        log_path = write_run_log(run_log_lines)
+        print(f'Run log written: {log_path}')
+        commit_and_push_log(log_path)
+    except Exception as e:
+        print(f'Run log failed: {e}')
+
     # Return appropriate exit code
     errors = sum(1 for r in all_results.values() if "error" in r)
     if errors > 0:
