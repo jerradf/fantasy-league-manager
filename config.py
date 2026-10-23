@@ -13,7 +13,8 @@ LEAGUES = {
         "roster_id": "8",
         "platform": "sleeper",
         "log_file": Path("logs/2026/sleeper/league1_run.log"),
-        "core_file": Path("data/core_players.json")
+        "core_file": Path("data/core_players.json"),
+        "state_file": Path("data/league1_state.json")
     },                  
     "league2": {
         "name": "Fantasy Fellowship League",
@@ -23,7 +24,8 @@ LEAGUES = {
         "roster_id": "8",
         "platform": "sleeper",
         "log_file": Path("logs/2026/sleeper/league2_run.log"),
-        "core_file": Path("data/core_players.json")
+        "core_file": Path("data/core_players.json"),
+        "state_file": Path("data/league2_state.json")
     }                   
 }    
 

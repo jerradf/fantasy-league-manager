@@ -67,3 +67,6 @@ Mobile\ Documents/
 *.backup
 .aider*
 /logs/*.log
+
+# Local secure credential mappings
+local_env.sh
