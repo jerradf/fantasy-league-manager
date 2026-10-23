@@ -5,51 +5,61 @@ from config import get_credential
 
 class SleeperClient:
     def __init__(self, *args, **kwargs):
+        # Point straight to the private internal web app gate endpoint 
         self.base_url = "https://sleeper.app"
 
-    def _get(self, endpoint):
+    def _authenticated_request(self, endpoint, method="GET", payload=None):
         url = f"{self.base_url}/{endpoint}"
-        try:
-            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-            with urllib.request.urlopen(req, timeout=10) as response:
-                return json.loads(response.read().decode())
-        except Exception as e:
-            print(f"ERROR - HTTP GET failure on {endpoint}: {e}")
-            return None
-
-    def _post(self, endpoint, payload, cookie=None):
-        url = f"{self.base_url}/{endpoint}"
-        data = json.dumps(payload).encode('utf-8')
-        
-        # Load local token credentials from environment storage automatically if not passed explicitly
-        active_cookie = cookie or get_credential("SLEEPER_TOKEN") or get_credential("SLEEPER_COOKIE")
+        token = get_credential("SLEEPER_TOKEN") or get_credential("SLEEPER_COOKIE")
         
         headers = {
             "Content-Type": "application/json",
-            "User-Agent": "Mozilla/5.0"
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "Accept": "application/json, text/plain, */*"
         }
-        if active_cookie:
-            headers["Cookie"] = str(active_cookie)
-            headers["Authorization"] = str(active_cookie)
-            
+        if token:
+            headers["Authorization"] = str(token)
+            headers["cookie"] = f"token={token}"
+
+        data = json.dumps(payload).encode('utf-8') if payload else None
         try:
-            req = urllib.request.Request(url, data=data, headers=headers, method="POST")
-            with urllib.request.urlopen(req, timeout=10) as response:
+            req = urllib.request.Request(url, data=data, headers=headers, method=method)
+            with urllib.request.urlopen(req, timeout=12) as response:
                 return json.loads(response.read().decode())
         except Exception as e:
-            print(f"ERROR - HTTP POST failure on {endpoint}: {e}")
-            return {"ok": False, "error": str(e)}
+            print(f"BACKDOOR ERROR - Failure accessing {endpoint} via {method}: {e}")
+            return None
 
-    def get_roster(self, league_id, roster_id):
-        endpoint = f"league/{league_id}/rosters"
-        rosters = self._get(endpoint)
-        if rosters:
-            for r in rosters:
-                if str(r.get("roster_id")) == str(roster_id):
-                    return r
+    def get_user_id_from_token(self):
+        # Backdoor pass: Call token validation loop to pull your unique user metadata
+        res = self._authenticated_request("user", method="GET")
+        if res and isinstance(res, dict):
+            return res.get("user_id")
         return None
 
+    def get_roster(self, league_id, roster_id):
+        # 1. Pull down the full league structure using authenticated session rules
+        endpoint = f"league/{league_id}/rosters"
+        rosters = self._authenticated_request(endpoint, method="GET")
+        if not rosters or not isinstance(rosters, list):
+            return {"players": []}
+
+        # 2. Attempt to resolve by internal user_id backdoor match first
+        my_uid = self.get_user_id_from_token()
+        if my_uid:
+            for r in rosters:
+                if str(r.get("owner_id")) == str(my_uid):
+                    return r
+
+        # 3. Fallback: match based on your explicit roster assignment sequence slot
+        for r in rosters:
+            if str(r.get("roster_id")) == str(roster_id):
+                return r
+
+        return rosters[0] if len(rosters) > 0 else {"players": []}
+
     def post_waiver_add(self, league_id, roster_id, add_player, drop_player, cookie=None):
+        # Authenticated backdoor transaction post gate routing
         endpoint = f"league/{league_id}/transactions"
         payload = {
             "type": "waiver",
@@ -57,7 +67,7 @@ class SleeperClient:
             "adds": {add_player: int(roster_id)},
             "drops": {drop_player: int(roster_id)}
         }
-        return self._post(endpoint, payload, cookie)
+        return self._authenticated_request(endpoint, method="POST", payload=payload)
 
 class YahooClient:
     def __init__(self, *args, **kwargs):
