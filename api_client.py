@@ -1,6 +1,7 @@
 import os
 import json
 import urllib.request
+from config import get_credential
 
 class SleeperClient:
     def __init__(self, *args, **kwargs):
@@ -19,12 +20,18 @@ class SleeperClient:
     def _post(self, endpoint, payload, cookie=None):
         url = f"{self.base_url}/{endpoint}"
         data = json.dumps(payload).encode('utf-8')
+        
+        # Load local token credentials from environment storage automatically if not passed explicitly
+        active_cookie = cookie or get_credential("SLEEPER_TOKEN") or get_credential("SLEEPER_COOKIE")
+        
         headers = {
             "Content-Type": "application/json",
             "User-Agent": "Mozilla/5.0"
         }
-        if cookie:
-            headers["Cookie"] = cookie
+        if active_cookie:
+            headers["Cookie"] = str(active_cookie)
+            headers["Authorization"] = str(active_cookie)
+            
         try:
             req = urllib.request.Request(url, data=data, headers=headers, method="POST")
             with urllib.request.urlopen(req, timeout=10) as response:
@@ -42,7 +49,7 @@ class SleeperClient:
                     return r
         return None
 
-    def post_waiver_add(self, league_id, roster_id, add_player, drop_player, cookie):
+    def post_waiver_add(self, league_id, roster_id, add_player, drop_player, cookie=None):
         endpoint = f"league/{league_id}/transactions"
         payload = {
             "type": "waiver",
@@ -59,5 +66,4 @@ class YahooClient:
         return {"players": []}
 
 def create_api_client(platform="sleeper", *args, **kwargs):
-    # Route everything to SleeperClient for now to secure the run path
     return SleeperClient(*args, **kwargs)
