@@ -11,7 +11,8 @@ LEAGUES = {
         "league_id": "1389329423609643008",
         "roster_id": "8",
         "platform": "sleeper",
-        "log_file": "logs/2026/sleeper/league1_run.log"
+        "log_file": "logs/2026/sleeper/league1_run.log",
+        "core_file": "data/core_players.json"
     },                  
     "league2": {
         "name": "Fantasy Fellowship League",
@@ -20,7 +21,8 @@ LEAGUES = {
         "league_id": "1389389459547500544",
         "roster_id": "8",
         "platform": "sleeper",
-        "log_file": "logs/2026/sleeper/league2_run.log"
+        "log_file": "logs/2026/sleeper/league2_run.log",
+        "core_file": "data/core_players.json"
     }                   
 }    
 
