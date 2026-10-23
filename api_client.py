@@ -1,11 +1,10 @@
 import os
 import json
 import urllib.request
-from config import Config
 
 class SleeperClient:
     def __init__(self):
-        self.base_url = Config.SLEEPER_API_URL
+        self.base_url = "https://sleeper.app"
 
     def _get(self, endpoint):
         url = f"{self.base_url}/{endpoint}"
@@ -52,3 +51,14 @@ class SleeperClient:
             "drops": {drop_player: int(roster_id)}
         }
         return self._post(endpoint, payload, cookie)
+
+class YahooClient:
+    def __init__(self):
+        print("INFO - Yahoo Client placeholder initialized.")
+    def get_roster(self, league_id, roster_id):
+        return {"players": []}
+
+def create_api_client(platform="sleeper"):
+    if platform.lower() == "yahoo":
+        return YahooClient()
+    return SleeperClient()
