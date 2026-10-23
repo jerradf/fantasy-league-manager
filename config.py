@@ -8,14 +8,18 @@ LEAGUES = {
         "name": "National Natty League",
         "team_name": "National Natty League",
         "id": "1389329423609643008",    
+        "league_id": "1389329423609643008",
         "roster_id": "8",
+        "platform": "sleeper",
         "log_file": "logs/2026/sleeper/league1_run.log"
     },                  
     "league2": {
         "name": "Fantasy Fellowship League",
         "team_name": "Fantasy Fellowship League",
         "id": "1389389459547500544",        
+        "league_id": "1389389459547500544",
         "roster_id": "8",
+        "platform": "sleeper",
         "log_file": "logs/2026/sleeper/league2_run.log"
     }                   
 }    
